@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Matches — BrandConnect{% endblock %}
+{% block content %}
+<section class="section">
+  <p class="eyebrow">Campaign #{{ campaign.id }}</p>
+  <h1>Best creator matches</h1>
+  <div class="campaign-summary"><b>{{ campaign.brand_name }}</b> · {{ campaign.category }} · ₹{{ "{:,}".format(campaign.budget) }} · {{ campaign.platform }}</div>
+  <div class="grid">
+  {% for c in creators %}
+    <article class="card match">
+      <div class="avatar">{{ c.name[0] }}</div>
+      <h3>{{ c.name }}</h3>
+      <p>{{ c.platform }} · {{ c.category }} · {{ c.location }}</p>
+      <div class="stats"><b>{{ "{:,}".format(c.followers) }}</b><span>followers</span><b>{{ "{:,}".format(c.avg_views) }}</b><span>avg views</span></div>
+      <div class="price">₹{{ "{:,}".format(c.price) }}</div>
+      <form method="POST" action="{{ url_for('contact_creator', campaign_id=campaign.id, creator_id=c.id) }}">
+  <button class="btn small" type="submit">Contact Creator</button>
+</form>
+    </article>
+  {% else %}
+    <div class="empty">No creator fits this campaign yet. Try increasing the budget or changing the category.</div>
+  {% endfor %}
+  </div>
+</section>
+{% endblock %}

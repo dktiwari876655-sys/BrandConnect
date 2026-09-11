@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Brand Dashboard - BrandConnect</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            color: #111827;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background: #111827;
+            color: white;
+            padding: 16px 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+        }
+
+        .navbar h2 {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            color: white;
+            text-decoration: none;
+            padding: 9px 15px;
+            border-radius: 7px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .home-btn {
+            background: #374151;
+        }
+
+        .logout-btn {
+            background: #ef4444;
+        }
+
+        /* MAIN */
+        .container {
+            max-width: 1150px;
+            margin: auto;
+            padding: 35px 20px 60px;
+        }
+
+        /* WELCOME */
+        .welcome {
+            background: white;
+            padding: 28px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+        }
+
+        .welcome h1 {
+            margin: 0 0 8px;
+            font-size: 30px;
+        }
+
+        .welcome p {
+            margin: 0;
+            color: #6b7280;
+        }
+
+        /* STAT CARDS */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 22px 18px;
+            border-radius: 14px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.07);
+            border: 1px solid #eef0f4;
+        }
+
+        .card h3 {
+            margin: 0 0 10px;
+            font-size: 15px;
+            color: #4b5563;
+        }
+
+        .card p {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+            color: #111827;
+        }
+
+        /* NOTIFICATIONS */
+        .notification-box {
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+        }
+
+        .notification-box h2 {
+            margin-top: 0;
+        }
+
+        .message-alert {
+            background: #f3e8ff;
+            border-left: 5px solid #7c3aed;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 18px;
+        }
+
+        .message-alert h3 {
+            margin-top: 0;
+        }
+
+        .message-alert a {
+            color: #6d28d9;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .notification-item {
+            background: #f9fafb;
+            padding: 12px 15px;
+            border-radius: 9px;
+            margin-bottom: 8px;
+        }
+
+        /* ACTIONS */
+        .section-title {
+            margin: 35px 0 15px;
+            font-size: 23px;
+        }
+
+        .actions {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 35px;
+        }
+
+        .action {
+            background: white;
+            padding: 24px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+        }
+
+        .action h2 {
+            margin-top: 0;
+            font-size: 19px;
+        }
+
+        .action p {
+            color: #6b7280;
+            line-height: 1.5;
+        }
+
+        .action a {
+            display: inline-block;
+            margin-top: 10px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            padding: 11px 17px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .action a:hover,
+        .deal-btn:hover,
+        .campaign-btn:hover {
+            opacity: 0.88;
+        }
+
+        /* CAMPAIGNS */
+        .campaigns {
+            margin-top: 30px;
+        }
+
+        .campaign {
+            background: white;
+            padding: 24px;
+            border-radius: 15px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+            border: 1px solid #eef0f4;
+        }
+
+        .campaign h3 {
+            margin-top: 0;
+            font-size: 20px;
+        }
+
+        .campaign p {
+            margin: 8px 0;
+            color: #4b5563;
+        }
+
+       .campaign-btn {
+    display: inline-block;
+    margin-top: 12px;
+    background: #2563eb;
+    color: white !important;
+    text-decoration: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.campaign-btn:hover {
+    color: white !important;
+    background: #1d4ed8;
+}
+
+        /* REQUEST STATUS */
+        .request-status {
+            display: inline-block;
+            padding: 7px 13px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .status-accepted {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-rejected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-progress {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-completed {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        /* DEAL BUTTONS */
+        .deal-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .deal-btn {
+            display: inline-block;
+            color: white;
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .chat-btn {
+            background: #2563eb;
+        }
+
+        .pay-btn {
+            background: #16a34a;
+        }
+
+        .review-btn {
+            background: #7c3aed;
+        }
+
+        .start-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 17px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .complete-btn {
+            background: #16a34a;
+            color: white;
+            border: none;
+            padding: 10px 17px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .empty {
+            background: white;
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+            color: #6b7280;
+        }
+        /* ===== DASHBOARD POLISH ===== */
+
+.welcome {
+    background: white;
+    padding: 25px 30px;
+    border-radius: 14px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    border-left: 5px solid #2563eb;
+}
+
+.welcome h1 {
+    margin-top: 0;
+    font-size: 28px;
+    color: #111827;
+}
+
+.welcome p {
+    color: #6b7280;
+    margin-bottom: 0;
+}
+
+.card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+
+.card h3 {
+    color: #111827;
+}
+
+.action {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.action:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+
+.action h2 {
+    color: #111827;
+}
+
+.campaign {
+    transition: box-shadow 0.2s ease;
+}
+
+.campaign:hover {
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+
+.campaign a {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.campaign a:hover {
+    text-decoration: underline;
+}
+/* ===== DASHBOARD STATS CARDS ===== */
+
+.cards {
+    gap: 18px;
+}
+
+.cards .card {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+}
+
+.cards .card h3 {
+    font-size: 17px;
+    margin-bottom: 12px;
+}
+
+.cards .card p {
+    font-size: 28px;
+    font-weight: bold;
+    margin: 0;
+    color: #111827;
+}
+
+.cards .card::after {
+    content: "";
+    position: absolute;
+    right: -25px;
+    top: -25px;
+    width: 80px;
+    height: 80px;
+    background: #eff6ff;
+    border-radius: 50%;
+}
+/* ===== QUICK ACTIONS POLISH ===== */
+
+.actions {
+    margin-top: 20px;
+}
+
+.action {
+    border: 1px solid #e5e7eb;
+    position: relative;
+    overflow: hidden;
+}
+
+.action h2 {
+    margin-top: 0;
+    font-size: 20px;
+}
+
+.action p {
+    color: #6b7280;
+    line-height: 1.6;
+}
+
+.action a {
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.action a:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+    text-decoration: none;
+    /* ===== ACTIVE DEALS POLISH ===== */
+
+.campaigns h2 {
+    margin-bottom: 18px;
+    color: #111827;
+}
+
+.campaign {
+    border: 1px solid #e5e7eb;
+}
+
+.campaign h3 {
+    font-size: 19px;
+    color: #111827;
+}
+
+.campaign p strong {
+    color: #374151;
+}
+
+.request-status {
+    font-size: 13px;
+    letter-spacing: 0.2px;
+}
+
+.campaign form {
+    margin-top: 5px;
+}
+
+.campaign button {
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.campaign button:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+/* ===== NOTIFICATIONS POLISH ===== */
+
+.notification-box {
+    background: white;
+    padding: 22px;
+    border-radius: 14px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    margin-bottom: 30px;
+}
+
+.notification-box h2 {
+    margin-top: 0;
+    color: #111827;
+}
+
+.notification-message {
+    background: #f3e8ff;
+    padding: 15px 18px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    border-left: 4px solid #7c3aed;
+}
+
+.notification-item {
+    padding: 12px 15px;
+    margin-top: 10px;
+    background: #f9fafb;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+}
+
+.notification-item:hover {
+    background: #f3f4f6;
+}
+}
+
+        /* MOBILE */
+        @media (max-width: 900px) {
+
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .actions {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .navbar {
+                padding: 14px 18px;
+            }
+
+            .navbar h2 {
+                font-size: 18px;
+            }
+
+            .nav-btn {
+                padding: 8px 10px;
+                font-size: 12px;
+            }
+
+            .container {
+                padding: 20px 14px 40px;
+            }
+
+            .welcome h1 {
+                font-size: 24px;
+            }
+
+            .cards {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .card {
+                padding: 17px 13px;
+            }
+
+            .card p {
+                font-size: 20px;
+            }
+
+            .deal-buttons {
+                flex-direction: column;
+            }
+
+            .deal-btn,
+            .start-btn,
+            .complete-btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+        /* ===== QUICK ACTIONS POLISH ===== */
+
+.section-title {
+    margin-top: 35px;
+    margin-bottom: 18px;
+    color: #111827;
+}
+
+.actions {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    margin-bottom: 40px;
+}
+
+.action {
+    background: white;
+    padding: 26px;
+    border-radius: 14px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.07);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.action:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+.action h2 {
+    margin-top: 0;
+    color: #111827;
+    font-size: 20px;
+}
+
+.action p {
+    color: #6b7280;
+    line-height: 1.6;
+    min-height: 50px;
+}
+
+.action a {
+    display: inline-block;
+    margin-top: 12px;
+    background: #2563eb;
+    color: white;
+    text-decoration: none;
+    padding: 11px 18px;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.action a:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+/* ===== CAMPAIGN BUTTON ===== */
+
+.campaign-btn {
+    display: inline-block;
+    margin-top: 15px;
+    background: #2563eb;
+    color: white;
+    text-decoration: none;
+    padding: 11px 18px;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.campaign-btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+/* ===== MY CAMPAIGNS POLISH ===== */
+
+.campaigns {
+    margin-top: 35px;
+}
+
+.campaign {
+    background: white;
+    padding: 26px;
+    border-radius: 14px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.07);
+    margin-bottom: 20px;
+}
+
+.campaign h3 {
+    margin-top: 0;
+    margin-bottom: 18px;
+    font-size: 20px;
+    color: #111827;
+}
+
+.campaign p {
+    margin: 9px 0;
+    color: #4b5563;
+    line-height: 1.5;
+}
+
+.campaign p strong {
+    color: #111827;
+}
+
+.campaign-btn {
+    margin-top: 16px;
+}
+/* ===== COLLABORATION REQUESTS POLISH ===== */
+
+.request-status {
+    display: inline-block;
+    padding: 7px 14px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    margin-left: 6px;
+}
+
+.status-accepted {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-rejected {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.status-pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+/* ===== ACTIVE DEALS BUTTONS ===== */
+
+.deal-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.deal-btn {
+    display: inline-block;
+    padding: 10px 16px;
+    border-radius: 8px;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.deal-btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+.chat-btn {
+    background: #2563eb;
+}
+
+.pay-btn {
+    background: #16a34a;
+}
+
+.review-btn {
+    background: #7c3aed;
+}
+
+.complete-btn,
+.start-btn {
+    border: none;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.complete-btn {
+    background: #16a34a;
+}
+
+.start-btn {
+    background: #2563eb;
+}
+
+.complete-btn:hover,
+.start-btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+.status-progress {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.status-completed {
+    background: #dcfce7;
+    color: #166534;
+}
+@media (max-width: 700px) {
+    .actions {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
+    }
+
+    .action {
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .cards {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+    }
+}
+.deal-btn {
+    color: white !important;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.deal-btn:hover {
+    color: white !important;
+}
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+
+        <h2>BrandConnect 🚀</h2>
+
+        <div class="nav-links">
+            <a href="/" class="nav-btn home-btn">Home</a>
+            <a href="/logout" class="nav-btn logout-btn">Logout</a>
+        </div>
+
+    </div>
+
+
+    <div class="container">
+
+        <!-- WELCOME -->
+        <div class="welcome">
+
+            <h1>Welcome, {{ user_name }}! 👋</h1>
+
+            <p>
+                You are logged in as
+                <strong>{{ user_role }}</strong>.
+            </p>
+
+        </div>
+
+
+        <!-- NOTIFICATIONS -->
+        <div class="notification-box">
+
+            <h2>🔔 Notifications</h2>
+
+            <div class="notification-message">
+
+
+                <h3>💬 Messages</h3>
+
+                {% if unread_messages > 0 %}
+
+                    <p>
+                        🔴
+                        <a href="{{ url_for('chat', request_id=unread_request_id) }}">
+                            You have {{ unread_messages }} unread message(s).
+                            Open Chat →
+                        </a>
+                    </p>
+
+                {% else %}
+
+                    <p>✅ No unread messages.</p>
+
+                {% endif %}
+
+            </div>
+
+
+            {% if notifications %}
+
+                {% for notification in notifications %}
+
+                    <div class="notification-item">
+                        🔔 {{ notification["message"] }}
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <p>No notifications yet.</p>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- DASHBOARD STATS -->
+        <h2 class="section-title">📊 Dashboard Overview</h2>
+
+        <div class="cards">
+
+            <div class="card">
+                <h3>📢 Campaigns</h3>
+                <p>{{ campaigns|length }}</p>
+            </div>
+
+            <div class="card">
+                <h3>🤝 Requests</h3>
+                <p>{{ total_requests }}</p>
+            </div>
+
+            <div class="card">
+                <h3>✅ Accepted</h3>
+                <p>{{ accepted_requests }}</p>
+            </div>
+
+            <div class="card">
+                <h3>⏳ Pending</h3>
+                <p>{{ pending_requests }}</p>
+            </div>
+
+            <div class="card">
+                <h3>❌ Rejected</h3>
+                <p>{{ rejected_requests }}</p>
+            </div>
+
+        </div>
+
+
+        <!-- QUICK ACTIONS -->
+        <h2 class="section-title">⚡ Quick Actions</h2>
+
+        <div class="actions">
+
+            <div class="action">
+
+                <h2>🎯 Create Campaign</h2>
+
+                <p>
+                    Create a new campaign and find the perfect creators
+                    for your brand.
+                </p>
+
+                <a href="/campaign">
+                    Create Campaign →
+                </a>
+
+            </div>
+
+
+            <div class="action">
+
+                <h2>🔎 Find Creators</h2>
+
+                <p>
+                    Explore creators and choose the best match
+                    for your campaign.
+                </p>
+
+                <a href="/creators">
+                    Find Creators →
+                </a>
+
+            </div>
+
+
+            <div class="action">
+
+                <h2>💰 Payment History</h2>
+
+                <p>
+                    View all payments made to creators.
+                </p>
+
+                <a href="/payments">
+                    View Payments →
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- MY CAMPAIGNS -->
+        <div class="campaigns">
+
+            <h2 class="section-title">📋 My Campaigns</h2>
+
+            {% if campaigns %}
+
+                {% for campaign in campaigns %}
+
+                    <div class="campaign">
+
+                        <h3>
+                            📢 {{ campaign["category"] }} Campaign
+                        </h3>
+
+                        <p>
+                            <strong>Budget:</strong>
+                            ₹{{ campaign["budget"] }}
+                        </p>
+
+                        <p>
+                            <strong>Platform:</strong>
+                            {{ campaign["platform"] }}
+                        </p>
+
+                        {% if campaign["location"] %}
+
+                            <p>
+                                <strong>Location:</strong>
+                                {{ campaign["location"] }}
+                            </p>
+
+                        {% endif %}
+
+                        {% if campaign["description"] %}
+
+                            <p>
+                                <strong>Description:</strong>
+                                {{ campaign["description"] }}
+                            </p>
+
+                        {% endif %}
+
+                        <a
+                            href="/matches/{{ campaign['id'] }}"
+                            class="campaign-btn"
+                        >
+                            View Matched Creators →
+                        </a>
+
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="empty">
+
+                    <p>
+                        You haven't created any campaigns yet.
+                    </p>
+
+                    <a href="/campaign" class="campaign-btn">
+                        Create your first campaign →
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- COLLABORATION REQUESTS -->
+        <div class="campaigns">
+
+            <h2 class="section-title">
+                🤝 Collaboration Requests
+            </h2>
+
+            {% if collaboration_requests %}
+
+                {% for request in collaboration_requests %}
+
+                    <div class="campaign">
+
+                        <h3>
+                            👤 {{ request["creator_name"] }}
+                        </h3>
+
+                        <p>
+                            <strong>Creator Platform:</strong>
+                            {{ request["platform"] }}
+                        </p>
+
+                        <p>
+                            <strong>Category:</strong>
+                            {{ request["category"] }}
+                        </p>
+
+                        <p>
+                            <strong>Campaign:</strong>
+                            {{ request["brand_name"] }}
+                        </p>
+
+                        <p>
+                            <strong>Budget:</strong>
+                            ₹{{ request["budget"] }}
+                        </p>
+
+                        <p>
+                            <strong>Campaign Platform:</strong>
+                            {{ request["campaign_platform"] }}
+                        </p>
+
+                        <p>
+                            <strong>Status:</strong>
+
+                            {% if request["status"] == "accepted" %}
+
+                                <span class="request-status status-accepted">
+                                    ✅ Accepted
+                                </span>
+
+                            {% elif request["status"] == "rejected" %}
+
+                                <span class="request-status status-rejected">
+                                    ❌ Rejected
+                                </span>
+
+                            {% else %}
+
+                                <span class="request-status status-pending">
+                                    ⏳ Pending
+                                </span>
+
+                            {% endif %}
+
+                        </p>
+
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="empty">
+                    <p>No collaboration requests yet.</p>
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- ACTIVE DEALS -->
+        <div class="campaigns">
+
+            <h2 class="section-title">
+                🤝 Active Deals
+            </h2>
+
+            {% set accepted_deals = collaboration_requests
+                | selectattr("status", "equalto", "accepted")
+                | list
+            %}
+
+            {% if accepted_deals %}
+
+                {% for deal in accepted_deals %}
+
+                    <div class="campaign">
+
+                        <h3>
+                            🎉 {{ deal["creator_name"] }}
+                        </h3>
+
+                        <p>
+                            <strong>Creator Platform:</strong>
+                            {{ deal["platform"] }}
+                        </p>
+
+                        <p>
+                            <strong>Category:</strong>
+                            {{ deal["category"] }}
+                        </p>
+
+                        <p>
+                            <strong>Campaign:</strong>
+                            {{ deal["brand_name"] }}
+                        </p>
+
+                        <p>
+                            <strong>Budget:</strong>
+                            ₹{{ deal["budget"] }}
+                        </p>
+
+                        <p>
+                            <strong>Campaign Platform:</strong>
+                            {{ deal["campaign_platform"] }}
+                        </p>
+
+
+                        {% if deal["deal_status"] == "in_progress" %}
+
+                            <span class="request-status status-progress">
+                                🔄 Deal In Progress
+                            </span>
+
+                            <br><br>
+
+                            <form
+                                method="POST"
+                                action="/deal/{{ deal['id'] }}/complete"
+                            >
+
+                                <button
+                                    type="submit"
+                                    class="complete-btn"
+                                >
+                                    ✅ Complete Deal
+                                </button>
+
+                            </form>
+
+
+                        {% elif deal["deal_status"] == "completed" %}
+
+                            <span class="request-status status-completed">
+                                ✅ Deal Completed
+                            </span>
+
+                            <div class="deal-buttons">
+
+                                <a
+                                    href="{{ url_for('chat', request_id=deal['id']) }}"
+                                    class="deal-btn chat-btn"
+                                >
+                                    💬 Open Chat
+                                </a>
+
+                                <a
+                                    href="{{ url_for('pay_creator', request_id=deal['id']) }}"
+                                    class="deal-btn pay-btn"
+                                >
+                                    💰 Pay Creator
+                                </a>
+
+                                <a
+                                    href="{{ url_for('review_creator', request_id=deal['id']) }}"
+                                    class="deal-btn review-btn"
+                                >
+                                    ⭐ Review Creator
+                                </a>
+
+                            </div>
+
+
+                        {% else %}
+
+                            <span class="request-status status-accepted">
+                                🎉 Deal Accepted
+                            </span>
+
+                            <br><br>
+
+                            <form
+                                method="POST"
+                                action="/deal/{{ deal['id'] }}/start"
+                            >
+
+                                <button
+                                    type="submit"
+                                    class="start-btn"
+                                >
+                                    ▶️ Start Deal
+                                </button>
+
+                            </form>
+
+                        {% endif %}
+
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="empty">
+
+                    <p>
+                        No active deals yet.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</body>
+</html>

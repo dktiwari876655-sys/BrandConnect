@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Creator Profile - BrandConnect</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            color: #222;
+        }
+
+        .navbar {
+            background: #111827;
+            color: white;
+            padding: 18px 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h2 {
+            margin: 0;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 9px 16px;
+            border-radius: 7px;
+            margin-left: 8px;
+        }
+
+        .home {
+            background: #2563eb;
+        }
+
+        .logout {
+            background: #ef4444;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: auto;
+            padding: 35px 20px;
+        }
+
+        .card {
+    background: white;
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    border: 1px solid #e5e7eb;
+}
+.card h1 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 28px;
+    color: #111827;
+}
+       
+
+       .form-group {
+    margin-bottom: 20px;
+}
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 11px;
+            border: 1px solid #d1d5db;
+            border-radius: 7px;
+            font-size: 15px;
+        }
+        input:focus,
+textarea:focus,
+select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    outline: none;
+    transition: 0.2s ease;
+}
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .buttons {
+            margin-top: 25px;
+        }
+
+        button,
+.back {
+    border: none;
+    padding: 12px 20px;
+    border-radius: 9px;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+        button {
+            background: #16a34a;
+        }
+        button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(22, 163, 74, 0.25);
+}
+
+        .back {
+            background: #6b7280;
+            margin-left: 8px;
+        }
+        .back:hover {
+    background: #4b5563;
+}
+.card {
+    padding: 22px;
+}
+
+.card h1 {
+    font-size: 24px;
+}
+
+.container {
+    padding: 25px 15px;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+button,
+.back {
+    width: 100%;
+    text-align: center;
+}
+
+        @media (max-width: 700px) {
+            .navbar {
+                padding: 15px 20px;
+            }
+
+            .nav-links a {
+                padding: 7px 10px;
+                font-size: 13px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+
+        <h2>BrandConnect</h2>
+
+        <div class="nav-links">
+            <a href="/" class="home">Home</a>
+            <a href="{{ url_for('logout') }}" class="logout">Logout</a>
+        </div>
+
+    </div>
+
+    <div class="container">
+
+        <div class="card">
+
+            <h1>✏️ Edit Creator Profile</h1>
+
+            <p>Update your creator information below.</p>
+
+            <form method="POST">
+
+                <div class="form-group">
+                    <label>Name</label>
+                    <input
+                        type="text"
+                        name="name"
+                        value="{{ creator['name'] }}"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label>Platform</label>
+                    <input
+                        type="text"
+                        name="platform"
+                        value="{{ creator['platform'] }}"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label>Category</label>
+                    <input
+                        type="text"
+                        name="category"
+                        value="{{ creator['category'] }}"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label>Followers</label>
+                    <input
+                        type="number"
+                        name="followers"
+                        value="{{ creator['followers'] }}"
+                        min="0"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label>Average Views</label>
+                    <input
+                        type="number"
+                        name="avg_views"
+                        value="{{ creator['avg_views'] }}"
+                        min="0"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label>Promotion Price (₹)</label>
+                    <input
+                        type="number"
+                        name="price"
+                        value="{{ creator['price'] }}"
+                        min="0"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label>Location</label>
+                    <input
+                        type="text"
+                        name="location"
+                        value="{{ creator['location'] }}"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label>Bio</label>
+                    <textarea
+                        name="bio"
+                        required>{{ creator['bio'] }}</textarea>
+                </div>
+
+                <div class="buttons">
+
+                    <button type="submit">
+                        💾 Save Changes
+                    </button>
+
+                    <a
+                        href="{{ url_for('creator_dashboard') }}"
+                        class="back">
+                        ← Back
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

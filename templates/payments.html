@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payments - BrandConnect</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            margin: 0;
+        }
+
+        .navbar {
+            background: #111827;
+            color: white;
+            padding: 18px 35px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+        .container h1 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 28px;
+    color: #111827;
+}
+        
+
+        .payment {
+    background: white;
+    padding: 24px;
+    margin-bottom: 18px;
+    border-radius: 16px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    border: 1px solid #e5e7eb;
+}
+.payment h3 {
+    margin-top: 0;
+    margin-bottom: 14px;
+    font-size: 19px;
+    color: #111827;
+}
+
+.payment p {
+    margin: 9px 0;
+    color: #4b5563;
+    font-size: 14px;
+}
+
+.payment strong {
+    color: #111827;
+}
+.payment p:nth-of-type(2) {
+    font-size: 16px;
+}
+
+.payment p:nth-of-type(2) strong {
+    font-weight: 700;
+}
+
+        .paid {
+    display: inline-block;
+    color: #166534;
+    background: #dcfce7;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 13px;
+}
+       .back {
+    display: inline-block;
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: 0.2s ease;
+}
+
+.back:hover {
+    text-decoration: underline;
+}
+@media (max-width: 600px) {
+    .container {
+        margin: 20px auto;
+        padding: 15px;
+    }
+
+    .navbar {
+        padding: 15px 20px;
+    }
+
+    .payment {
+        padding: 18px;
+    }
+
+    .container h1 {
+        font-size: 24px;
+    }
+}
+    </style>
+</head>
+
+<body>
+
+<div class="navbar">
+    <h2>BrandConnect 💰</h2>
+</div>
+
+<div class="container">
+
+    <h1>💰 Payment History</h1>
+
+    {% if payments %}
+
+        {% for payment in payments %}
+
+        <div class="payment">
+
+            {% if session["user_role"] == "brand" %}
+
+                <h3>👤 {{ payment["creator_name"] }}</h3>
+
+                <p>
+                    <strong>Brand:</strong>
+                    {{ payment["brand_name"] }}
+                </p>
+
+            {% else %}
+
+                <h3>🏢 {{ payment["brand_name"] }}</h3>
+
+            {% endif %}
+
+            <p>
+                <strong>Amount:</strong>
+                ₹{{ payment["amount"] }}
+            </p>
+
+            <p>
+                <strong>UPI ID:</strong>
+                {{ payment["upi_id"] }}
+            </p>
+
+            <p class="paid">
+                ✅ {{ payment["status"]|upper }}
+            </p>
+
+            <p>
+                <strong>Date:</strong>
+                {{ payment["created_at"] }}
+            </p>
+
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <p>No payments found.</p>
+
+    {% endif %}
+
+    <br>
+
+    {% if session["user_role"] == "brand" %}
+        <a class="back" href="{{ url_for('brand_dashboard') }}">
+            ← Back to Dashboard
+        </a>
+    {% else %}
+        <a class="back" href="{{ url_for('creator_dashboard') }}">
+            ← Back to Dashboard
+        </a>
+    {% endif %}
+
+</div>
+
+</body>
+</html>

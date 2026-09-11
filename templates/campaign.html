@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Create Campaign — BrandConnect{% endblock %}
+{% block content %}
+<section class="form-wrap">
+  <p class="eyebrow">Brand dashboard</p>
+  <h1>Create a campaign</h1>
+  <p class="lead">Tell us what you need. We’ll show creators who fit your budget.</p>
+  <form class="form" method="post">
+    <label>Brand name<input required name="brand_name" placeholder="ABC Clothing"></label>
+    <label>Promotion category<input required name="category" placeholder="Fashion"></label>
+    <label>Budget (₹)<input required min="1" type="number" name="budget" placeholder="5000"></label>
+    <label>Platform<select name="platform"><option>YouTube</option><option>Instagram</option><option>Any</option></select></label>
+    <label>Target location<input name="location" placeholder="Jaipur"></label>
+    <label>Campaign details<textarea name="description" rows="5" placeholder="What should the creator promote?"></textarea></label>
+    <button class="btn" type="submit">Find Matching Creators →</button>
+  </form>
+</section>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}BrandConnect — Find affordable creators{% endblock %}
+{% block content %}
+<section class="hero">
+  <div>
+    <p class="eyebrow">Creator marketing marketplace</p>
+    <h1>Promote your brand with creators who fit your budget.</h1>
+    <p class="lead">Small businesses can discover affordable YouTubers and influencers without paying celebrity-level prices.</p>
+    <a class="btn" href="{{ url_for('campaign') }}">Start a Campaign →</a>
+    <div style="margin-top:15px; display:flex; gap:10px;">
+
+  <a class="btn" href="{{ url_for('login') }}">
+    🔐 Login
+  </a>
+
+  <a class="btn" href="{{ url_for('signup') }}">
+    📝 Sign Up
+  </a>
+
+</div>
+  </div>
+  <div class="hero-card">
+    <div class="mini">Example campaign</div>
+    <h3>Budget: ₹5,000</h3>
+    <p>Category: Technology</p>
+    <div class="pill">4 creators matched</div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div><p class="eyebrow">Featured creators</p><h2>Creators for every budget</h2></div>
+    <a href="{{ url_for('creators') }}">View all →</a>
+  </div>
+  <div class="grid">
+  {% for c in creators[:4] %}
+    <article class="card">
+      <div class="avatar">{{ c.name[0] }}</div>
+      <h3>{{ c.name }}</h3>
+      <p>{{ c.platform }} · {{ c.category }}</p>
+      <div class="stats"><b>{{ "{:,}".format(c.followers) }}</b><span>followers</span><b>{{ "{:,}".format(c.avg_views) }}</b><span>avg views</span></div>
+      <div class="price">₹{{ "{:,}".format(c.price) }} <span>/ promotion</span></div>
+    </article>
+  {% endfor %}
+  </div>
+</section>
+{% endblock %}

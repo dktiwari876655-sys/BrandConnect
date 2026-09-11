@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Creators — BrandConnect{% endblock %}
+{% block content %}
+<section class="section">
+  <p class="eyebrow">Creator marketplace</p>
+  <h1>Find creators</h1>
+  <form class="filters" method="get">
+    <input name="category" value="{{ category }}" placeholder="Category e.g. Gaming">
+    <input name="max_price" value="{{ max_price }}" type="number" placeholder="Max price ₹">
+    <button class="btn" type="submit">Search</button>
+  </form>
+  <div class="grid">
+  {% for c in creators %}
+    <article class="card">
+      <div class="avatar">{{ c.name[0] }}</div>
+      <h3>{{ c.name }}</h3><p>{{ c.platform }} · {{ c.category }} · {{ c.location }}</p>
+      <div class="stats"><b>{{ "{:,}".format(c.followers) }}</b><span>followers</span><b>{{ "{:,}".format(c.avg_views) }}</b><span>avg views</span></div>
+      <p>{{ c.bio }}</p>
+      <div class="price">₹{{ "{:,}".format(c.price) }} <span>/ promotion</span></div>
+      <a href="{{ url_for('creator_profile', creator_id=c.id) }}" class="btn">
+  View Profile
+</a>
+    </article>
+  {% else %}
+    <div class="empty">No creators matched your filters.</div>
+  {% endfor %}
+  </div>
+</section>
+{% endblock %}

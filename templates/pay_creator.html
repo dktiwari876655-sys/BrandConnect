@@ -1,0 +1,287 @@
+{% extends "base.html" %}
+
+{% block title %}Pay Creator — BrandConnect{% endblock %}
+
+{% block content %}
+
+<div style="max-width:600px; margin:50px auto;">
+
+    <div class="card">
+
+        <h1>💰 Pay Creator</h1>
+
+        <p>
+            <strong>Creator:</strong>
+            {{ deal["creator_name"] }}
+        </p>
+
+        <p>
+            <strong>Campaign:</strong>
+            {{ deal["brand_name"] }}
+        </p>
+
+        <p>
+            <strong>Creator Price:</strong>
+            ₹{{ deal["price"] }}
+        </p>
+
+        <hr>
+
+        {% if deal["already_paid"] %}
+
+    <div style="
+        background:#dcfce7;
+        color:#166534;
+        padding:14px 20px;
+        border-radius:7px;
+        font-weight:bold;
+        display:inline-block;">
+        ✅ Already Paid
+    </div>
+
+{% else %}
+
+    <button
+        type="button"
+        id="pay-button"
+        style="background:#16a34a;
+               color:white;
+               border:none;
+               padding:12px 22px;
+               border-radius:7px;
+               cursor:pointer;
+               font-weight:bold;">
+        💳 Pay with Razorpay
+    </button>
+
+{% endif %}
+
+        <div id="success-box"
+             style="
+                display:none;
+                margin-top:25px;
+                padding:20px;
+                background:#dcfce7;
+                border:1px solid #22c55e;
+                border-radius:10px;
+             ">
+
+            <h2 style="color:#15803d;">
+                ✅ Payment Successful!
+            </h2>
+
+            <p>
+                <strong>Creator:</strong>
+                {{ deal["creator_name"] }}
+            </p>
+
+            <p>
+                <strong>Amount Paid:</strong>
+                ₹{{ deal["price"] }}
+            </p>
+
+            <p style="color:#15803d;">
+                Your payment has been recorded successfully.
+            </p>
+
+            <a href="{{ url_for('payments') }}"
+               style="
+                    display:inline-block;
+                    margin-top:10px;
+                    background:#7c3aed;
+                    color:white;
+                    padding:10px 18px;
+                    border-radius:7px;
+                    text-decoration:none;
+                    font-weight:bold;
+               ">
+                💳 View Payment History
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+
+document.getElementById("pay-button").addEventListener("click", async function () {
+
+    const button = document.getElementById("pay-button");
+
+    const amount = Number("{{ deal['price'] }}");
+
+    button.disabled = true;
+    button.innerText = "Creating Payment...";
+
+    try {
+
+        const response = await fetch(
+            "{{ url_for('create_payment_order', request_id=deal['id']) }}",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    amount: amount
+                })
+            }
+        );
+
+        const order = await response.json();
+
+        if (!response.ok) {
+
+            alert(
+                "❌ " +
+                (order.error || "Unable to create payment order.")
+            );
+
+            button.disabled = false;
+            button.innerText = "💳 Pay with Razorpay";
+
+            return;
+        }
+
+        const options = {
+
+            key: order.key_id,
+
+            amount: order.amount,
+
+            currency: order.currency,
+
+            name: "BrandConnect",
+
+            description: "Creator Payment",
+
+            order_id: order.order_id,
+
+            handler: async function (payment) {
+
+                button.innerText = "Verifying Payment...";
+
+                try {
+
+                    const verifyResponse = await fetch(
+                        "{{ url_for('verify_payment') }}",
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+
+                            body: JSON.stringify({
+
+                                request_id:
+                                    Number("{{ deal['id'] }}"),
+
+                                amount:
+                                    amount,
+
+                                razorpay_payment_id:
+                                    payment.razorpay_payment_id,
+
+                                razorpay_order_id:
+                                    payment.razorpay_order_id,
+
+                                razorpay_signature:
+                                    payment.razorpay_signature
+
+                            })
+                        }
+                    );
+
+                    const result =
+                        await verifyResponse.json();
+
+                    if (result.success) {
+
+                        document.getElementById(
+                            "success-box"
+                        ).style.display = "block";
+
+                        button.style.display = "none";
+
+                        window.scrollTo({
+                            top: document.body.scrollHeight,
+                            behavior: "smooth"
+                        });
+
+                    } else {
+
+                        alert(
+                            "❌ Payment verification failed: " +
+                            (result.error || "Unknown error")
+                        );
+
+                        button.disabled = false;
+                        button.innerText =
+                            "💳 Pay with Razorpay";
+                    }
+
+                } catch (error) {
+
+                    console.error(error);
+
+                    alert(
+                        "❌ Payment verification error."
+                    );
+
+                    button.disabled = false;
+                    button.innerText =
+                        "💳 Pay with Razorpay";
+                }
+            },
+
+            theme: {
+                color: "#7c3aed"
+            }
+        };
+
+        const razorpay =
+            new Razorpay(options);
+
+        razorpay.on(
+            "payment.failed",
+            function (response) {
+
+                alert(
+                    "❌ Payment failed: " +
+                    response.error.description
+                );
+
+                button.disabled = false;
+                button.innerText =
+                    "💳 Pay with Razorpay";
+            }
+        );
+
+        razorpay.open();
+
+        button.innerText =
+            "Razorpay Payment Opened...";
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "❌ Something went wrong. Please try again."
+        );
+
+        button.disabled = false;
+        button.innerText =
+            "💳 Pay with Razorpay";
+    }
+
+});
+
+</script>
+
+{% endblock %}

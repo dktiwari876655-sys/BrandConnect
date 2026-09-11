@@ -4,16 +4,25 @@ import sqlite3
 from pathlib import Path
 import os
 import razorpay
+from dotenv import load_dotenv
+from cloudinary_service import configure_cloudinary, upload_creator_image
+from mongo_service import connect_mongodb, get_database, sync_creator
 
-RAZORPAY_KEY_ID = os.environ.get("rzp_test_TXDoah1tOJAEBM")  # Replace with your Razorpay Key ID
-RAZORPAY_KEY_SECRET = os.environ.get("bWEp4uRskWGWciMIFAUg6Qec")
+load_dotenv(Path(__file__).with_name(".env"))
+
+RAZORPAY_KEY_ID = os.environ.get("RAZORPAY_KEY_ID")
+RAZORPAY_KEY_SECRET = os.environ.get("RAZORPAY_KEY_SECRET")
 
 
 razorpay_client = razorpay.Client(
     auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET)
 )
 
-app = Flask(__name__)
+app = Flask(
+    __name__,
+    template_folder="../frontend/templates",
+    static_folder="../frontend/static",
+)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "brandconnect-dev-key")
 DB = Path(__file__).with_name("brandconnect.db")
 @app.route("/google45d6f7d4de3223e2.html")
@@ -38,7 +47,8 @@ def init_db():
         avg_views INTEGER NOT NULL,
         price INTEGER NOT NULL,
         location TEXT NOT NULL,
-        bio TEXT DEFAULT ''
+        bio TEXT DEFAULT '',
+        image_url TEXT DEFAULT ''
     );
 
     CREATE TABLE IF NOT EXISTS campaigns (
@@ -98,6 +108,13 @@ def init_db():
         
        );
     """)
+
+    try:
+        conn.execute(
+            "ALTER TABLE creators ADD COLUMN image_url TEXT DEFAULT ''"
+        )
+    except sqlite3.OperationalError:
+        pass
 
     try:
          
@@ -183,6 +200,9 @@ def init_db():
         ])
 
     conn.commit()
+    if get_database() is not None:
+        for creator in conn.execute("SELECT * FROM creators").fetchall():
+            sync_creator(creator)
     conn.close()
 
 
@@ -419,6 +439,20 @@ def edit_creator_profile():
         price = int(request.form["price"])
         location = request.form["location"].strip()
         bio = request.form["bio"].strip()
+        image_url = creator["image_url"] or ""
+
+        image_file = request.files.get("image")
+        if image_file and image_file.filename:
+            try:
+                image_url = upload_creator_image(image_file, creator["id"])
+            except RuntimeError as error:
+                conn.close()
+                flash(str(error), "error")
+                return redirect(url_for("edit_creator_profile"))
+            except Exception:
+                conn.close()
+                flash("Image upload failed. Please try again.", "error")
+                return redirect(url_for("edit_creator_profile"))
 
         conn.execute("""
             UPDATE creators
@@ -430,7 +464,8 @@ def edit_creator_profile():
                 avg_views = ?,
                 price = ?,
                 location = ?,
-                bio = ?
+                bio = ?,
+                image_url = ?
             WHERE id = ?
         """, (
             name,
@@ -441,10 +476,15 @@ def edit_creator_profile():
             price,
             location,
             bio,
+            image_url,
             creator["id"]
         ))
 
         conn.commit()
+        updated_creator = conn.execute(
+            "SELECT * FROM creators WHERE id = ?", (creator["id"],)
+        ).fetchone()
+        sync_creator(updated_creator)
         conn.close()
 
         return redirect(url_for("creator_dashboard"))
@@ -1553,6 +1593,12 @@ def review_creator(request_id):
 @app.route("/robots.txt")
 def robots_txt():
     return "User-agent: *\nAllow: /\n", 200, {"Content-Type": "text/plain"}
+
+
+connect_mongodb()
+configure_cloudinary()
+init_db()
+
+
 if __name__ == "__main__":
-    init_db()
     app.run(debug=True)

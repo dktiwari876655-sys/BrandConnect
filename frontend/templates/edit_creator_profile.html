@@ -192,7 +192,15 @@ button,
 
             <p>Update your creator information below.</p>
 
-            <form method="POST">
+            <form method="POST" enctype="multipart/form-data">
+
+                <div class="form-group">
+                    <label for="image">Profile Image</label>
+                    <input id="image" type="file" name="image" accept="image/png,image/jpeg,image/webp">
+                    {% if creator['image_url'] %}
+                        <p>Current image is uploaded. Select a new file to replace it.</p>
+                    {% endif %}
+                </div>
 
                 <div class="form-group">
                     <label>Name</label>

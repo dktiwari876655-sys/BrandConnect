@@ -20,6 +20,17 @@ python app.py
 
 5. Open the local address shown by Flask (usually http://127.0.0.1:5000).
 
+## MongoDB and Cloudinary
+
+1. Copy `backend/.env.example` to `backend/.env`.
+2. Create a MongoDB Atlas database and paste its connection string into `MONGO_URI`.
+3. Create a Cloudinary account and add `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, and `CLOUDINARY_API_SECRET`.
+4. Add a strong `FLASK_SECRET_KEY` and your Razorpay credentials.
+
+MongoDB stores a synchronized copy of creator profiles. Existing marketplace, campaign, chat, and payment flows continue using the app's current SQLite database. Creator profile images are uploaded to Cloudinary and their secure URLs are saved in both stores.
+
+Integration code is separated into `backend/mongo_service.py` and `backend/cloudinary_service.py`; `backend/app.py` only calls these services.
+
 ## Pages
 
 - `/` — Home

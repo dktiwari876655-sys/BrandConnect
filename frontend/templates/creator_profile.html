@@ -12,9 +12,13 @@
 
         <div class="profile-header">
 
-            <div class="avatar profile-avatar">
-                {{ creator["name"][0] }}
-            </div>
+            {% if creator["image_url"] %}
+                <img class="avatar profile-avatar" src="{{ creator['image_url'] }}" alt="{{ creator['name'] }} profile image">
+            {% else %}
+                <div class="avatar profile-avatar">
+                    {{ creator["name"][0] }}
+                </div>
+            {% endif %}
 
             <div>
                 <h1>{{ creator["name"] }}</h1>
